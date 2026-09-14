@@ -1,0 +1,12 @@
+buatkan issue.md yang berisi perencanaan untuk nanti diimplementasikan oleh junior programmer atau AI model yang lebih murah.
+
+isi dari perencanaannya adalah sebagai berikut:
+
+buatkan saya halaman baru untuk menu Nilai.
+di halaman tersebut terdapat form filter dari data jadwal yang sudah ada, ketika jadwal dipilih maka akan menampilkan data dari nilai.
+setelah data tampil, ada pilihan untuk melakukan export nilai dengan mengirimkan id_jadwal ke api.
+
+gunakan dokumentasi QUICK_REFERENCE_EXPORT_NILAI.md sebagai acuan dalam implementasi halaman ini.
+
+jelaskan tahapan yang harus dilakukan untuk mengimplementasikan fitur ini.
+anggap nanti yang akan mengimplementasikan ini adalah junior programmer atau AI model yang lebih murah.
