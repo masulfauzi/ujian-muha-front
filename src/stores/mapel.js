@@ -27,8 +27,8 @@ export const useMapelStore = defineStore('mapel', {
 
       try {
         const response = await mapelService.getMapelList(page, pageSize)
-        this.mapels = response.data.data
-        this.totalMapels = response.data.total
+        this.mapels = response.data.data || []
+        this.totalMapels = response.data.total || 0
         this.currentPage = page
         this.pageSize = pageSize
         return response.data
