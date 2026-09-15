@@ -15,12 +15,27 @@
           <h1 class="text-3xl font-bold text-slate-900">Manajemen Peserta Ujian</h1>
           <p class="text-slate-500 mt-1">Kelola semua peserta ujian dalam sistem</p>
         </div>
-        <button
-          @click="handleCreate"
-          class="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-          <span class="material-symbols-outlined">add</span>
-          Buat Peserta Baru
-        </button>
+        <div class="flex items-center gap-3">
+          <button
+            @click="handleDownloadTemplate"
+            :disabled="isDownloadingTemplate"
+            class="flex items-center gap-2 bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+            <span class="material-symbols-outlined">download</span>
+            {{ isDownloadingTemplate ? 'Mengunduh...' : 'Download Template' }}
+          </button>
+          <button
+            @click="handleImport"
+            class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+            <span class="material-symbols-outlined">upload</span>
+            Import Peserta
+          </button>
+          <button
+            @click="handleCreate"
+            class="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+            <span class="material-symbols-outlined">add</span>
+            Buat Peserta Baru
+          </button>
+        </div>
       </div>
 
       <!-- Error Message -->
@@ -162,13 +177,16 @@ import { usePesertaStore } from '@/stores/peserta'
 import { useDialog } from '@/composables/useDialog'
 import { useKelasStore } from '@/stores/kelas'
 import { useRouter } from 'vue-router'
+import { pesertaService } from '@/services/pesertaService'
+import { downloadBlob, extractBlobErrorMessage } from '@/utils/download'
 
 const pesertaStore = usePesertaStore()
 const kelasStore = useKelasStore()
 const router = useRouter()
-const { $confirm } = useDialog()
+const { $confirm, $alert } = useDialog()
 const currentPage = ref(1)
 const filterKelasId = ref('')
+const isDownloadingTemplate = ref(false)
 
 onMounted(async () => {
   try {
@@ -201,6 +219,28 @@ watch(error, (newVal) => {
 
 const handleCreate = () => {
   router.push({ name: 'peserta.create' })
+}
+
+const handleImport = () => {
+  router.push({ name: 'peserta.import' })
+}
+
+const handleDownloadTemplate = async () => {
+  if (isDownloadingTemplate.value) return
+  isDownloadingTemplate.value = true
+  try {
+    const response = await pesertaService.downloadTemplate()
+    downloadBlob(
+      response,
+      'template_import_peserta.xlsx',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+  } catch (err) {
+    const message = await extractBlobErrorMessage(err, 'Gagal mengunduh template')
+    await $alert(message, { title: 'Gagal', type: 'error' })
+  } finally {
+    isDownloadingTemplate.value = false
+  }
 }
 
 const handleView = (id) => {

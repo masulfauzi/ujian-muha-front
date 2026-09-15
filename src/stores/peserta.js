@@ -115,6 +115,23 @@ export const usePesertaStore = defineStore('peserta', {
       }
     },
 
+    async importPeserta(file) {
+      this.isLoading = true
+      this.error = null
+      this.success = null
+
+      try {
+        const response = await pesertaService.importPeserta(file)
+        this.success = response.message || 'Import peserta selesai'
+        return response.data
+      } catch (err) {
+        this.error = err.response?.data?.message || 'Failed to import peserta'
+        throw err
+      } finally {
+        this.isLoading = false
+      }
+    },
+
     async restorePeserta(id) {
       this.isLoading = true
       this.error = null

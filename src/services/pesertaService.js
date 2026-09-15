@@ -68,4 +68,31 @@ export const pesertaService = {
       throw error
     }
   },
+
+  // Import peserta dari file Excel (.xls/.xlsx). Kelas ditentukan per baris
+  // lewat kolom "kelas" (nama kelas) di dalam file itu sendiri.
+  importPeserta: async (file) => {
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const response = await api.post('/peserta/import', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Download template Excel (.xlsx) untuk import peserta
+  downloadTemplate: async () => {
+    try {
+      const response = await api.get('/peserta/template', {
+        responseType: 'blob',
+      })
+      return response
+    } catch (error) {
+      throw error
+    }
+  },
 }
