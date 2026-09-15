@@ -125,6 +125,17 @@
           </div>
           <div v-else class="space-y-2 border border-slate-300 rounded-lg p-4"
             :class="{ 'border-red-500': errors.id_jurusan }">
+            <div class="flex items-center pb-2 mb-1 border-b border-slate-200">
+              <input
+                type="checkbox"
+                id="jurusan_all"
+                v-model="isAllJurusanSelected"
+                @change="handleJurusanChange"
+                class="w-4 h-4 border border-slate-300 rounded focus:ring-sky-500">
+              <label for="jurusan_all" class="ml-3 text-slate-900 font-semibold cursor-pointer">
+                ALL (Pilih Semua Jurusan)
+              </label>
+            </div>
             <div v-for="jurusan in jurusanOptions" :key="jurusan.id" class="flex items-center">
               <input
                 type="checkbox"
@@ -150,6 +161,16 @@
             Tidak ada kelas yang tersedia untuk pilihan ini
           </div>
           <div v-else class="space-y-3 max-h-60 overflow-y-auto border border-slate-200 rounded-lg p-4">
+            <div class="flex items-center pb-2 mb-1 border-b border-slate-200">
+              <input
+                type="checkbox"
+                id="kelas_all"
+                v-model="isAllKelasSelected"
+                class="w-4 h-4 border border-slate-300 rounded focus:ring-sky-500">
+              <label for="kelas_all" class="ml-3 text-slate-900 font-semibold cursor-pointer">
+                ALL (Pilih Semua Kelas)
+              </label>
+            </div>
             <div v-for="kelas in kelasOptions" :key="kelas.id" class="flex items-center">
               <input
                 type="checkbox"
@@ -311,6 +332,22 @@ const jurusanOptions = computed(() =>
 const kelasOptions = computed(() =>
   kelasStore.kelass.map(k => ({ id: k.id, label: k.nama_kelas }))
 )
+
+const isAllJurusanSelected = computed({
+  get: () => jurusanOptions.value.length > 0 &&
+    jurusanOptions.value.every(j => formData.id_jurusan.includes(j.id)),
+  set: (checked) => {
+    formData.id_jurusan = checked ? jurusanOptions.value.map(j => j.id) : []
+  },
+})
+
+const isAllKelasSelected = computed({
+  get: () => kelasOptions.value.length > 0 &&
+    kelasOptions.value.every(k => formData.selectedKelasIds.includes(k.id)),
+  set: (checked) => {
+    formData.selectedKelasIds = checked ? kelasOptions.value.map(k => k.id) : []
+  },
+})
 
 const validateNamaUjian = () => {
   errors.nama_ujian = formData.nama_ujian ? '' : 'Nama ujian wajib diisi'
