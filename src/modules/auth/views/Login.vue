@@ -93,19 +93,35 @@
                 </form>
 
                 <!-- User Agent Info (debug) -->
-                <div class="mt-md p-3 bg-surface-container-low border border-outline-variant rounded-lg">
-                    <div class="flex items-center justify-between gap-2 mb-1">
-                        <span class="font-label-sm text-on-surface-variant uppercase tracking-wide">User Agent Browser Ini</span>
-                        <button
-                            type="button"
-                            @click="copyUserAgent"
-                            class="text-primary-container hover:underline font-label-sm shrink-0">
-                            {{ copyLabel }}
-                        </button>
+                <div class="mt-md p-3 bg-surface-container-low border border-outline-variant rounded-lg space-y-3">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="font-label-sm text-on-surface-variant uppercase tracking-wide">User Agent Browser Ini</span>
+                            <button
+                                type="button"
+                                @click="copy(userAgent, 'userAgent')"
+                                class="text-primary-container hover:underline font-label-sm shrink-0">
+                                {{ copyLabel.userAgent }}
+                            </button>
+                        </div>
+                        <p class="font-mono text-[11px] leading-snug text-on-surface-variant break-all select-all">
+                            {{ userAgent }}
+                        </p>
                     </div>
-                    <p class="font-mono text-[11px] leading-snug text-on-surface-variant break-all select-all">
-                        {{ userAgent }}
-                    </p>
+                    <div class="pt-3 border-t border-outline-variant">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="font-label-sm text-on-surface-variant uppercase tracking-wide">X-Requested-With Ujian</span>
+                            <button
+                                type="button"
+                                @click="copy(examClientId, 'xRequestedWith')"
+                                class="text-primary-container hover:underline font-label-sm shrink-0">
+                                {{ copyLabel.xRequestedWith }}
+                            </button>
+                        </div>
+                        <p class="font-mono text-[11px] leading-snug text-on-surface-variant break-all select-all">
+                            {{ examClientId }}
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Decorative corner elements -->
@@ -121,6 +137,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginUser } from '@/services/authService'
 import { useAuthStore } from '@/stores/auth'
+import { EXAM_CLIENT_ID } from '@/services/nilaiService'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -134,16 +151,17 @@ const form = ref({
 const errors = ref({})
 const showPassword = ref(false)
 const userAgent = navigator.userAgent
-const copyLabel = ref('Salin')
+const examClientId = EXAM_CLIENT_ID
+const copyLabel = ref({ userAgent: 'Salin', xRequestedWith: 'Salin' })
 
-const copyUserAgent = async () => {
+const copy = async (value, key) => {
     try {
-        await navigator.clipboard.writeText(userAgent)
-        copyLabel.value = 'Tersalin!'
+        await navigator.clipboard.writeText(value)
+        copyLabel.value[key] = 'Tersalin!'
     } catch {
-        copyLabel.value = 'Gagal menyalin'
+        copyLabel.value[key] = 'Gagal menyalin'
     } finally {
-        setTimeout(() => { copyLabel.value = 'Salin' }, 2000)
+        setTimeout(() => { copyLabel.value[key] = 'Salin' }, 2000)
     }
 }
 
