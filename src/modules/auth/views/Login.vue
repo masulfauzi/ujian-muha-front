@@ -6,12 +6,11 @@
                 <!-- Logo & Heading -->
                 <div class="text-center mb-md">
                     <div
-                        class="inline-flex items-center justify-center w-16 h-16 bg-primary-container/10 rounded-xl mb-md">
-                        <span class="material-symbols-outlined text-[40px] text-primary-container"
-                            data-icon="cloud_done" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+                        class="inline-flex items-center justify-center w-16 h-16 mb-md">
+                        <img src="/logo-smk-muha.png" alt="Logo SMK Muhammadiyah 2 Boja Kendal" class="w-full h-full object-contain" />
                     </div>
                     <h1 class="font-h2 text-h2 text-on-surface mb-2">Login</h1>
-                    <p class="font-body-md text-on-surface-variant">Welcome back to SkyView Admin</p>
+                    <p class="font-body-md text-on-surface-variant">Selamat datang di CBT Online</p>
                 </div>
                 <!-- Error Message -->
                 <div v-if="errors.general"
