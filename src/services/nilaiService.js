@@ -1,11 +1,19 @@
 import api from './api'
 
+// Nilai yang dikirim sebagai header X-Requested-With saat memulai ujian.
+// Browser tidak mengizinkan JS menimpa header User-Agent, jadi backend
+// mengecek header ini sebagai alternatif — nilai ini wajib didaftarkan
+// di whitelist /user-agent (module User Agent) agar peserta bisa mulai ujian.
+export const EXAM_CLIENT_ID = 'CBT-Online-WebClient'
+
 export const nilaiService = {
   // token wajib diisi hanya jika jadwal.wajib_token aktif
   mulaiUjian: async (idJadwal, token = null) => {
     try {
       const payload = token ? { token } : {}
-      const response = await api.post(`/nilai/mulai-ujian/${idJadwal}`, payload)
+      const response = await api.post(`/nilai/mulai-ujian/${idJadwal}`, payload, {
+        headers: { 'X-Requested-With': EXAM_CLIENT_ID },
+      })
       return response
     } catch (error) {
       throw error

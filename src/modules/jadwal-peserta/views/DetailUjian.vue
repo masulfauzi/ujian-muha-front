@@ -258,6 +258,11 @@ async function mulaiSekarang() {
             return
         }
 
+        if (status === 403) {
+            startError.value = 'Browser atau perangkat ini belum diizinkan untuk mengerjakan ujian. Hubungi pengawas/admin untuk mendaftarkan perangkat ini.'
+            return
+        }
+
         startError.value = message || 'Gagal memulai ujian. Coba lagi.'
     } finally {
         isStarting.value = false
