@@ -11,6 +11,7 @@ import { jadwalPesertaRoutes } from '../modules/jadwal-peserta/routes'
 import { nilaiRoutes } from '../modules/nilai/routes'
 import { ujianTokenRoutes } from '../modules/ujian-token/routes'
 import { userAgentRoutes } from '../modules/user-agent/routes'
+import { loginLogRoutes } from '../modules/login-log/routes'
 import { setupAuthGuards } from './guards'
 
 const routes = [
@@ -26,6 +27,7 @@ const routes = [
     ...nilaiRoutes,
     ...ujianTokenRoutes,
     ...userAgentRoutes,
+    ...loginLogRoutes,
     ...authRoutes,
     { path: '/:pathMatch(.*)*', redirect: '/dashboard' },
 ]
