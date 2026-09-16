@@ -91,6 +91,23 @@
                         </span>
                     </button>
                 </form>
+
+                <!-- User Agent Info (debug) -->
+                <div class="mt-md p-3 bg-surface-container-low border border-outline-variant rounded-lg">
+                    <div class="flex items-center justify-between gap-2 mb-1">
+                        <span class="font-label-sm text-on-surface-variant uppercase tracking-wide">User Agent Browser Ini</span>
+                        <button
+                            type="button"
+                            @click="copyUserAgent"
+                            class="text-primary-container hover:underline font-label-sm shrink-0">
+                            {{ copyLabel }}
+                        </button>
+                    </div>
+                    <p class="font-mono text-[11px] leading-snug text-on-surface-variant break-all select-all">
+                        {{ userAgent }}
+                    </p>
+                </div>
+
                 <!-- Decorative corner elements -->
                 <div class="absolute -top-12 -right-12 w-24 h-24 bg-secondary-container/10 rounded-full blur-2xl"></div>
                 <div class="absolute -bottom-12 -left-12 w-24 h-24 bg-primary-container/10 rounded-full blur-2xl"></div>
@@ -116,6 +133,19 @@ const form = ref({
 
 const errors = ref({})
 const showPassword = ref(false)
+const userAgent = navigator.userAgent
+const copyLabel = ref('Salin')
+
+const copyUserAgent = async () => {
+    try {
+        await navigator.clipboard.writeText(userAgent)
+        copyLabel.value = 'Tersalin!'
+    } catch {
+        copyLabel.value = 'Gagal menyalin'
+    } finally {
+        setTimeout(() => { copyLabel.value = 'Salin' }, 2000)
+    }
+}
 
 const handleLogin = async () => {
     errors.value = {}
