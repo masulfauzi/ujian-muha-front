@@ -48,6 +48,27 @@
           <p class="text-slate-500 text-sm mt-1">{{ formData.user_agent.length }} / 500 karakter</p>
         </div>
 
+        <!-- X-Requested-With Field -->
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">
+            X-Requested-With <span class="text-red-600">*</span>
+          </label>
+          <input
+            v-model="formData.x_requested_with"
+            @blur="validateXRequestedWith"
+            type="text"
+            placeholder="Contoh: CBT-Online-WebClient"
+            maxlength="255"
+            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all font-mono text-sm"
+            :class="{ 'border-red-500 focus:ring-red-500': errors.x_requested_with }">
+          <p v-if="errors.x_requested_with" class="text-red-600 text-sm mt-1">{{ errors.x_requested_with }}</p>
+          <p class="text-slate-500 text-sm mt-1">
+            {{ formData.x_requested_with.length }} / 255 karakter. Peserta lolos jika User-Agent COCOK dengan baris manapun,
+            ATAU X-Requested-With COCOK dengan baris manapun (tidak harus baris yang sama) — isi salah satu kolom
+            dengan nilai yang benar-benar ingin dicocokkan, kolom lainnya boleh diisi placeholder.
+          </p>
+        </div>
+
         <!-- Keterangan Field -->
         <div>
           <label class="block text-sm font-semibold text-slate-900 mb-2">Keterangan (Opsional)</label>
@@ -95,11 +116,13 @@ const error = ref(null)
 
 const formData = reactive({
   user_agent: '',
+  x_requested_with: '',
   keterangan: ''
 })
 
 const errors = reactive({
-  user_agent: ''
+  user_agent: '',
+  x_requested_with: ''
 })
 
 const validateUserAgent = () => {
@@ -111,9 +134,19 @@ const validateUserAgent = () => {
   }
 }
 
+const validateXRequestedWith = () => {
+  errors.x_requested_with = ''
+  if (!formData.x_requested_with || formData.x_requested_with.trim().length === 0) {
+    errors.x_requested_with = 'X-Requested-With wajib diisi'
+  } else if (formData.x_requested_with.length > 255) {
+    errors.x_requested_with = 'X-Requested-With maksimal 255 karakter'
+  }
+}
+
 const validateForm = () => {
   validateUserAgent()
-  return !errors.user_agent
+  validateXRequestedWith()
+  return !errors.user_agent && !errors.x_requested_with
 }
 
 const handleSubmit = async () => {
@@ -128,6 +161,7 @@ const handleSubmit = async () => {
   try {
     await userAgentStore.createUserAgent({
       user_agent: formData.user_agent.trim(),
+      x_requested_with: formData.x_requested_with.trim(),
       keterangan: formData.keterangan.trim()
     })
 

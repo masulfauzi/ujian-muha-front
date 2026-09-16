@@ -58,6 +58,7 @@
             <tr>
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">No.</th>
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">User Agent</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">X-Requested-With</th>
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">Keterangan</th>
               <th class="px-6 py-3 text-center text-xs font-semibold text-slate-600 uppercase">Aksi</th>
             </tr>
@@ -69,6 +70,9 @@
               </td>
               <td class="px-6 py-4 text-slate-900 font-medium max-w-md">
                 <span class="line-clamp-2 break-all">{{ userAgent.user_agent }}</span>
+              </td>
+              <td class="px-6 py-4 text-slate-900 font-mono text-sm break-all max-w-xs">
+                {{ userAgent.x_requested_with || '-' }}
               </td>
               <td class="px-6 py-4 text-slate-600">
                 {{ userAgent.keterangan ? truncateText(userAgent.keterangan, 50) : '-' }}

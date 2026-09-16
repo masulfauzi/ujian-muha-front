@@ -39,6 +39,12 @@
           <p class="text-slate-900 font-mono text-sm break-all">{{ selectedUserAgent.user_agent }}</p>
         </div>
 
+        <!-- X-Requested-With Card -->
+        <div class="bg-white rounded-lg shadow border border-slate-200 p-6">
+          <h3 class="text-sm font-semibold text-slate-600 uppercase mb-2">X-Requested-With</h3>
+          <p class="text-slate-900 font-mono text-sm break-all">{{ selectedUserAgent.x_requested_with }}</p>
+        </div>
+
         <!-- Keterangan Card -->
         <div class="bg-white rounded-lg shadow border border-slate-200 p-6">
           <h3 class="text-sm font-semibold text-slate-600 uppercase mb-3">Keterangan</h3>
