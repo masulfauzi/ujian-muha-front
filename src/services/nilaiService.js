@@ -1,19 +1,20 @@
 import api from './api'
 
-// Nilai yang dikirim sebagai header X-Requested-With saat memulai ujian.
-// Browser tidak mengizinkan JS menimpa header User-Agent, jadi backend
-// mengecek header ini sebagai alternatif — nilai ini wajib didaftarkan
-// di whitelist /user-agent (module User Agent) agar peserta bisa mulai ujian.
-export const EXAM_CLIENT_ID = 'CBT-Online-WebClient'
-
 export const nilaiService = {
-  // token wajib diisi hanya jika jadwal.wajib_token aktif
+  // Token wajib diisi hanya jika jadwal.wajib_token aktif.
+  // Endpoint ini mengharuskan header User-Agent ATAU X-Requested-With
+  // terdaftar di whitelist /user-agent. Header User-Agent selalu dikirim
+  // browser secara native. Header X-Requested-With sengaja TIDAK di-set
+  // di sini — di aplikasi exam-browser Android (WebView), header ini
+  // otomatis disisipkan oleh sistem berisi package name aplikasi
+  // (mis. com.exam.browser); menimpanya secara manual di JS justru akan
+  // merusak nilai asli tersebut. Di browser biasa (Chrome/Firefox/Safari)
+  // header ini tidak terkirim sama sekali, sehingga whitelist untuk kasus
+  // itu mengandalkan User-Agent saja.
   mulaiUjian: async (idJadwal, token = null) => {
     try {
       const payload = token ? { token } : {}
-      const response = await api.post(`/nilai/mulai-ujian/${idJadwal}`, payload, {
-        headers: { 'X-Requested-With': EXAM_CLIENT_ID },
-      })
+      const response = await api.post(`/nilai/mulai-ujian/${idJadwal}`, payload)
       return response
     } catch (error) {
       throw error

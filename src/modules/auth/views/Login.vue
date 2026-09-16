@@ -109,17 +109,13 @@
                         </p>
                     </div>
                     <div class="pt-3 border-t border-outline-variant">
-                        <div class="flex items-center justify-between gap-2 mb-1">
-                            <span class="font-label-sm text-on-surface-variant uppercase tracking-wide">X-Requested-With Ujian</span>
-                            <button
-                                type="button"
-                                @click="copy(examClientId, 'xRequestedWith')"
-                                class="text-primary-container hover:underline font-label-sm shrink-0">
-                                {{ copyLabel.xRequestedWith }}
-                            </button>
-                        </div>
-                        <p class="font-mono text-[11px] leading-snug text-on-surface-variant break-all select-all">
-                            {{ examClientId }}
+                        <span class="font-label-sm text-on-surface-variant uppercase tracking-wide">X-Requested-With</span>
+                        <p class="text-[11px] leading-snug text-on-surface-variant mt-1">
+                            Tidak bisa ditampilkan di sini — header ini disisipkan oleh sistem (mis. aplikasi
+                            exam-browser Android akan otomatis mengirim package name-nya, seperti
+                            <code class="font-mono">com.exam.browser</code>), bukan oleh JavaScript halaman ini,
+                            sehingga tidak terbaca lewat browser biasa. Cek log request di server untuk
+                            memastikan nilai aslinya.
                         </p>
                     </div>
                 </div>
@@ -137,7 +133,6 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginUser } from '@/services/authService'
 import { useAuthStore } from '@/stores/auth'
-import { EXAM_CLIENT_ID } from '@/services/nilaiService'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -151,8 +146,7 @@ const form = ref({
 const errors = ref({})
 const showPassword = ref(false)
 const userAgent = navigator.userAgent
-const examClientId = EXAM_CLIENT_ID
-const copyLabel = ref({ userAgent: 'Salin', xRequestedWith: 'Salin' })
+const copyLabel = ref({ userAgent: 'Salin' })
 
 const copy = async (value, key) => {
     try {
