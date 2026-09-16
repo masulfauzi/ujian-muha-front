@@ -132,6 +132,25 @@ export const usePesertaStore = defineStore('peserta', {
       }
     },
 
+    async deleteAllPeserta() {
+      this.isLoading = true
+      this.error = null
+      this.success = null
+
+      try {
+        const response = await pesertaService.deleteAllPeserta()
+        this.success = response.message || 'Semua peserta berhasil dihapus'
+        this.pesertas = []
+        this.totalPeserta = 0
+        return true
+      } catch (err) {
+        this.error = err.response?.data?.message || 'Failed to delete all peserta'
+        throw err
+      } finally {
+        this.isLoading = false
+      }
+    },
+
     async restorePeserta(id) {
       this.isLoading = true
       this.error = null

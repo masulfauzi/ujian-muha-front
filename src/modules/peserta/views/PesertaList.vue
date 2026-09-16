@@ -164,6 +164,22 @@
           </button>
         </div>
       </div>
+
+      <!-- Danger Zone -->
+      <div class="mt-10 border border-red-200 bg-red-50 rounded-lg p-6">
+        <h2 class="text-lg font-semibold text-red-800">Zona Berbahaya</h2>
+        <p class="text-red-700 text-sm mt-1">
+          Menghapus semua peserta bersifat permanen dan tidak bisa di-restore. Record nilai/jawaban yang
+          terkait peserta tidak ikut terhapus, tapi jadi tidak lagi mereferensikan peserta manapun.
+        </p>
+        <button
+          @click="handleDeleteAll"
+          :disabled="isDeletingAll"
+          class="mt-4 flex items-center gap-2 bg-red-700 hover:bg-red-800 text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+          <span class="material-symbols-outlined">delete_forever</span>
+          {{ isDeletingAll ? 'Menghapus...' : 'Hapus Semua Peserta' }}
+        </button>
+      </div>
       </div>
     </main>
   </div>
@@ -183,10 +199,12 @@ import { downloadBlob, extractBlobErrorMessage } from '@/utils/download'
 const pesertaStore = usePesertaStore()
 const kelasStore = useKelasStore()
 const router = useRouter()
-const { $confirm, $alert } = useDialog()
+const { $confirm, $alert, $prompt } = useDialog()
 const currentPage = ref(1)
 const filterKelasId = ref('')
 const isDownloadingTemplate = ref(false)
+const isDeletingAll = ref(false)
+const DELETE_ALL_CONFIRM_PHRASE = 'HAPUS SEMUA PESERTA'
 
 onMounted(async () => {
   try {
@@ -272,5 +290,37 @@ const handlePageChange = async (page) => {
 const handleFilter = async () => {
   currentPage.value = 1
   await pesertaStore.fetchPesertaList(1, pageSize.value, { id_kelas: filterKelasId.value })
+}
+
+const handleDeleteAll = async () => {
+  const confirmed = await $confirm(
+    `Anda akan menghapus PERMANEN seluruh ${totalPeserta.value} peserta di seluruh sistem. ` +
+    'Tindakan ini tidak bisa dibatalkan dan tidak bisa di-restore. Lanjutkan?',
+    { title: 'Hapus Semua Peserta' }
+  )
+  if (!confirmed) return
+
+  const typed = await $prompt(
+    `Ketik "${DELETE_ALL_CONFIRM_PHRASE}" untuk mengonfirmasi penghapusan permanen ini.`,
+    { title: 'Konfirmasi Terakhir', inputLabel: 'Teks konfirmasi', inputPlaceholder: DELETE_ALL_CONFIRM_PHRASE }
+  )
+  if (typed !== DELETE_ALL_CONFIRM_PHRASE) {
+    if (typed !== null) {
+      await $alert('Teks konfirmasi tidak sesuai. Penghapusan dibatalkan.', { title: 'Dibatalkan' })
+    }
+    return
+  }
+
+  isDeletingAll.value = true
+  try {
+    await pesertaStore.deleteAllPeserta()
+    currentPage.value = 1
+    filterKelasId.value = ''
+    await pesertaStore.fetchPesertaList(1, pageSize.value)
+  } catch (err) {
+    console.error('Error deleting all peserta:', err)
+  } finally {
+    isDeletingAll.value = false
+  }
 }
 </script>

@@ -57,6 +57,17 @@ export const pesertaService = {
     }
   },
 
+  // Hapus PERMANEN seluruh peserta di seluruh sistem (bukan soft-delete,
+  // tidak bisa di-restore). Record nilai/jawaban terkait jadi orphan.
+  deleteAllPeserta: async () => {
+    try {
+      const response = await api.delete('/peserta', { params: { confirm: true } })
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
   // Download kartu ujian (PDF, siap cetak & gunting) untuk semua peserta satu kelas
   downloadKartuUjian: async (idKelas) => {
     try {
