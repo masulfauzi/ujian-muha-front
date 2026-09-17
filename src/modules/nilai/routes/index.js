@@ -1,10 +1,8 @@
-import NilaiList from '../views/NilaiList.vue'
-
 export const nilaiRoutes = [
   {
     path: '/admin/nilai',
     name: 'nilai.list',
-    component: NilaiList,
+    component: () => import('../views/NilaiList.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 ]

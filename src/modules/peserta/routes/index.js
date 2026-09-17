@@ -1,38 +1,32 @@
-import PesertaList from '../views/PesertaList.vue'
-import PesertaCreate from '../views/PesertaCreate.vue'
-import PesertaImport from '../views/PesertaImport.vue'
-import PesertaEdit from '../views/PesertaEdit.vue'
-import PesertaDetail from '../views/PesertaDetail.vue'
-
 export const pesertaRoutes = [
   {
     path: '/admin/peserta',
     name: 'peserta.list',
-    component: PesertaList,
+    component: () => import('../views/PesertaList.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/peserta/create',
     name: 'peserta.create',
-    component: PesertaCreate,
+    component: () => import('../views/PesertaCreate.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/peserta/import',
     name: 'peserta.import',
-    component: PesertaImport,
+    component: () => import('../views/PesertaImport.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/peserta/:id',
     name: 'peserta.detail',
-    component: PesertaDetail,
+    component: () => import('../views/PesertaDetail.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/peserta/:id/edit',
     name: 'peserta.edit',
-    component: PesertaEdit,
+    component: () => import('../views/PesertaEdit.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 ]

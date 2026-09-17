@@ -1,31 +1,26 @@
-import BankSoalList from '../views/BankSoalList.vue'
-import SoalCreate from '../views/SoalCreate.vue'
-import SoalEdit from '../views/SoalEdit.vue'
-import SoalDetail from '../views/SoalDetail.vue'
-
 export const bankSoalRoutes = [
   {
     path: '/admin/bank-soal',
     name: 'bankSoal.list',
-    component: BankSoalList,
+    component: () => import('../views/BankSoalList.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/bank-soal/create',
     name: 'bankSoal.create',
-    component: SoalCreate,
+    component: () => import('../views/SoalCreate.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/bank-soal/:id',
     name: 'bankSoal.detail',
-    component: SoalDetail,
+    component: () => import('../views/SoalDetail.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/bank-soal/:id/edit',
     name: 'bankSoal.edit',
-    component: SoalEdit,
+    component: () => import('../views/SoalEdit.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {

@@ -1,22 +1,18 @@
-import DashboardHome from '../views/DashboardHome.vue'
-import DashboardReports from '../views/DashboardReports.vue'
-import DashboardAdmin from '../views/DashboardAdmin.vue'
-
 export const dashboardRoutes = [
     {
         path: '/dashboard',
         name: 'dashboard.home',
-        component: DashboardHome,
+        component: () => import('../views/DashboardHome.vue'),
     },
     {
         path: '/dashboard/reports',
         name: 'dashboard.reports',
-        component: DashboardReports,
+        component: () => import('../views/DashboardReports.vue'),
     },
     {
         path: '/admin/dashboard',
         name: 'admin.dashboard',
-        component: DashboardAdmin,
+        component: () => import('../views/DashboardAdmin.vue'),
         meta: { requiresAuth: true, requiresAdmin: true },
     },
 ]

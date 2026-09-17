@@ -1,38 +1,32 @@
-import JadwalList from '../views/JadwalList.vue'
-import JadwalCreate from '../views/JadwalCreate.vue'
-import JadwalDetail from '../views/JadwalDetail.vue'
-import JadwalEdit from '../views/JadwalEdit.vue'
-import JadwalSection from '../views/JadwalSection.vue'
-
 export const jadwalRoutes = [
   {
     path: '/admin/jadwal',
     name: 'jadwal.list',
-    component: JadwalList,
+    component: () => import('../views/JadwalList.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/jadwal/create',
     name: 'jadwal.create',
-    component: JadwalCreate,
+    component: () => import('../views/JadwalCreate.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/jadwal/:id',
     name: 'jadwal.detail',
-    component: JadwalDetail,
+    component: () => import('../views/JadwalDetail.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/jadwal/:id/edit',
     name: 'jadwal.edit',
-    component: JadwalEdit,
+    component: () => import('../views/JadwalEdit.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: '/admin/jadwal/:id/section',
     name: 'jadwal.section',
-    component: JadwalSection,
+    component: () => import('../views/JadwalSection.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 ]

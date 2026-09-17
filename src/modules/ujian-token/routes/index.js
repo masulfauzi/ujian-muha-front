@@ -1,10 +1,8 @@
-import UjianTokenCurrent from '../views/UjianTokenCurrent.vue'
-
 export const ujianTokenRoutes = [
   {
     path: '/admin/ujian-token',
     name: 'ujianToken.current',
-    component: UjianTokenCurrent,
+    component: () => import('../views/UjianTokenCurrent.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 ]

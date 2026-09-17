@@ -1,24 +1,20 @@
-import JadwalUjianHariIni from '../views/JadwalUjianHariIni.vue'
-import DetailUjian from '../views/DetailUjian.vue'
-import PengerjaanUjian from '../views/PengerjaanUjian.vue'
-
 export const jadwalPesertaRoutes = [
   {
     path: '/schedule',
     name: 'peserta.jadwal',
-    component: JadwalUjianHariIni,
+    component: () => import('../views/JadwalUjianHariIni.vue'),
     meta: { requiresAuth: true },
   },
   {
     path: '/ujian/:id',
     name: 'peserta.ujian.detail',
-    component: DetailUjian,
+    component: () => import('../views/DetailUjian.vue'),
     meta: { requiresAuth: true },
   },
   {
     path: '/ujian/:id/pengerjaan',
     name: 'peserta.ujian.pengerjaan',
-    component: PengerjaanUjian,
+    component: () => import('../views/PengerjaanUjian.vue'),
     meta: { requiresAuth: true },
   },
 ]

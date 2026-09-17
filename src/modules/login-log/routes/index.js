@@ -1,10 +1,8 @@
-import LoginLogList from '../views/LoginLogList.vue'
-
 export const loginLogRoutes = [
   {
     path: '/admin/login-log',
     name: 'login-log.list',
-    component: LoginLogList,
+    component: () => import('../views/LoginLogList.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
 ]
