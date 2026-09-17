@@ -336,7 +336,7 @@
                                                         ? 'bg-secondary-container text-on-secondary-container'
                                                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                                 ]">
-                                                {{ q.no_soal ?? (qIdx + 1) }}
+                                                {{ sectionQuestionNumber(sIdx, qIdx) }}
                                             </button>
                                         </div>
                                         <p v-else class="text-xs text-slate-400 italic px-1">
@@ -448,7 +448,7 @@
                                                             ? 'bg-secondary-container text-on-secondary-container'
                                                             : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                                     ]">
-                                                    {{ q.no_soal ?? (qIdx + 1) }}
+                                                    {{ sectionQuestionNumber(sIdx, qIdx) }}
                                                 </button>
                                             </div>
                                             <p v-else class="text-xs text-slate-400 italic px-1">
@@ -577,6 +577,19 @@ const viewingSection = computed(() => sections.value[viewingSectionIndex.value] 
 const frontierUrutan = computed(() => sectionStatus.value?.urutan ?? sections.value[0]?.urutan ?? 1)
 const isViewingFrontier = computed(() => usesSections.value && viewingSection.value?.id === sectionStatus.value?.id_section)
 const isLastSectionInView = computed(() => !usesSections.value || (viewingSection.value && viewingSection.value.urutan >= sections.value.length))
+
+// Nomor tampilan soal di grid navigasi: berurutan lintas section berdasarkan urutan
+// section + posisi soal di dalamnya (bukan field no_soal dari backend, yang mengikuti
+// nomor asli di bank soal dan bisa acak antar section). Urutan pengerjaan yang
+// sebenarnya (acak jika acak_soal aktif) tetap dipakai apa adanya, hanya labelnya
+// yang dibuat berurutan 1..N.
+function sectionQuestionNumber(sectionIndex, questionIndex) {
+    let offset = 0
+    for (let i = 0; i < sectionIndex; i++) {
+        offset += sections.value[i]?.jml_soal || 0
+    }
+    return offset + questionIndex + 1
+}
 
 // Set soal yang sedang ditampilkan: soal section aktif (jika pakai section) atau seluruh soal
 const displayedQuestions = computed(() => {
