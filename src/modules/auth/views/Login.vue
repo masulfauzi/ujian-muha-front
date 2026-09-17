@@ -92,34 +92,6 @@
                     </button>
                 </form>
 
-                <!-- User Agent Info (debug) -->
-                <div class="mt-md p-3 bg-surface-container-low border border-outline-variant rounded-lg space-y-3">
-                    <div>
-                        <div class="flex items-center justify-between gap-2 mb-1">
-                            <span class="font-label-sm text-on-surface-variant uppercase tracking-wide">User Agent Browser Ini</span>
-                            <button
-                                type="button"
-                                @click="copy(userAgent, 'userAgent')"
-                                class="text-primary-container hover:underline font-label-sm shrink-0">
-                                {{ copyLabel.userAgent }}
-                            </button>
-                        </div>
-                        <p class="font-mono text-[11px] leading-snug text-on-surface-variant break-all select-all">
-                            {{ userAgent }}
-                        </p>
-                    </div>
-                    <div class="pt-3 border-t border-outline-variant">
-                        <span class="font-label-sm text-on-surface-variant uppercase tracking-wide">X-Requested-With</span>
-                        <p class="text-[11px] leading-snug text-on-surface-variant mt-1">
-                            Tidak bisa ditampilkan di sini — header ini disisipkan oleh sistem (mis. aplikasi
-                            exam-browser Android akan otomatis mengirim package name-nya, seperti
-                            <code class="font-mono">com.exam.browser</code>), bukan oleh JavaScript halaman ini,
-                            sehingga tidak terbaca lewat browser biasa. Cek log request di server untuk
-                            memastikan nilai aslinya.
-                        </p>
-                    </div>
-                </div>
-
                 <!-- Decorative corner elements -->
                 <div class="absolute -top-12 -right-12 w-24 h-24 bg-secondary-container/10 rounded-full blur-2xl"></div>
                 <div class="absolute -bottom-12 -left-12 w-24 h-24 bg-primary-container/10 rounded-full blur-2xl"></div>
@@ -145,19 +117,6 @@ const form = ref({
 
 const errors = ref({})
 const showPassword = ref(false)
-const userAgent = navigator.userAgent
-const copyLabel = ref({ userAgent: 'Salin' })
-
-const copy = async (value, key) => {
-    try {
-        await navigator.clipboard.writeText(value)
-        copyLabel.value[key] = 'Tersalin!'
-    } catch {
-        copyLabel.value[key] = 'Gagal menyalin'
-    } finally {
-        setTimeout(() => { copyLabel.value[key] = 'Salin' }, 2000)
-    }
-}
 
 const handleLogin = async () => {
     errors.value = {}
