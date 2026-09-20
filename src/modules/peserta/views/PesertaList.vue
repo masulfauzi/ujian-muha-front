@@ -50,7 +50,18 @@
 
       <!-- Filter Section -->
       <div v-if="!isLoading" class="mb-6">
-        <div class="flex items-center gap-4">
+        <form @submit.prevent="handleFilter" class="flex flex-wrap items-center gap-3">
+          <input
+            v-model="filterSearch"
+            type="text"
+            placeholder="Cari nama atau username..."
+            class="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 w-full max-w-xs">
+          <button
+            type="submit"
+            class="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+            <span class="material-symbols-outlined text-lg">search</span>
+            Cari
+          </button>
           <select
             v-model="filterKelasId"
             @change="handleFilter"
@@ -60,8 +71,14 @@
               {{ kelas.nama_kelas }}
             </option>
           </select>
-          <span class="text-slate-500 text-sm">Pilih kelas untuk memfilter data</span>
-        </div>
+          <button
+            v-if="filterSearch || filterKelasId"
+            type="button"
+            @click="handleResetFilter"
+            class="text-slate-500 hover:text-slate-700 font-semibold">
+            Reset
+          </button>
+        </form>
       </div>
 
       <!-- Loading State -->
@@ -202,6 +219,7 @@ const router = useRouter()
 const { $confirm, $alert, $prompt } = useDialog()
 const currentPage = ref(1)
 const filterKelasId = ref('')
+const filterSearch = ref('')
 const isDownloadingTemplate = ref(false)
 const isDeletingAll = ref(false)
 const DELETE_ALL_CONFIRM_PHRASE = 'HAPUS SEMUA PESERTA'
@@ -273,7 +291,7 @@ const handleDelete = async (id) => {
   if (await $confirm('Yakin ingin menghapus peserta ini?', { title: 'Konfirmasi Hapus' })) {
     try {
       await pesertaStore.deletePeserta(id)
-      await pesertaStore.fetchPesertaList(currentPage.value, pageSize.value, { id_kelas: filterKelasId.value })
+      await pesertaStore.fetchPesertaList(currentPage.value, pageSize.value, { id_kelas: filterKelasId.value, search: filterSearch.value })
     } catch (err) {
       console.error('Error deleting peserta:', err)
     }
@@ -283,13 +301,20 @@ const handleDelete = async (id) => {
 const handlePageChange = async (page) => {
   if (page >= 1 && page <= totalPages.value) {
     currentPage.value = page
-    await pesertaStore.fetchPesertaList(page, pageSize.value, { id_kelas: filterKelasId.value })
+    await pesertaStore.fetchPesertaList(page, pageSize.value, { id_kelas: filterKelasId.value, search: filterSearch.value })
   }
 }
 
 const handleFilter = async () => {
   currentPage.value = 1
-  await pesertaStore.fetchPesertaList(1, pageSize.value, { id_kelas: filterKelasId.value })
+  await pesertaStore.fetchPesertaList(1, pageSize.value, { id_kelas: filterKelasId.value, search: filterSearch.value })
+}
+
+const handleResetFilter = async () => {
+  filterSearch.value = ''
+  filterKelasId.value = ''
+  currentPage.value = 1
+  await pesertaStore.fetchPesertaList(1, pageSize.value)
 }
 
 const handleDeleteAll = async () => {
@@ -316,6 +341,7 @@ const handleDeleteAll = async () => {
     await pesertaStore.deleteAllPeserta()
     currentPage.value = 1
     filterKelasId.value = ''
+    filterSearch.value = ''
     await pesertaStore.fetchPesertaList(1, pageSize.value)
   } catch (err) {
     console.error('Error deleting all peserta:', err)
