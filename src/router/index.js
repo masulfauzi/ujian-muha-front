@@ -8,6 +8,7 @@ import { kelasRoutes } from '../modules/kelas/routes'
 import { pesertaRoutes } from '../modules/peserta/routes'
 import { jadwalRoutes } from '../modules/jadwal/routes'
 import { jadwalPesertaRoutes } from '../modules/jadwal-peserta/routes'
+import { monitoringRoutes } from '../modules/monitoring/routes'
 import { nilaiRoutes } from '../modules/nilai/routes'
 import { ujianTokenRoutes } from '../modules/ujian-token/routes'
 import { userAgentRoutes } from '../modules/user-agent/routes'
@@ -24,6 +25,7 @@ const routes = [
     ...pesertaRoutes,
     ...jadwalRoutes,
     ...jadwalPesertaRoutes,
+    ...monitoringRoutes,
     ...nilaiRoutes,
     ...ujianTokenRoutes,
     ...userAgentRoutes,

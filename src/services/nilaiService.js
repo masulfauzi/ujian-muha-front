@@ -82,4 +82,28 @@ export const nilaiService = {
       throw error
     }
   },
+
+  // Monitoring live status semua peserta terdaftar pada satu jadwal
+  // (termasuk yang belum mulai), untuk di-poll berkala dari dashboard admin.
+  getMonitoring: async (idJadwal, idKelas = null) => {
+    try {
+      const params = {}
+      if (idKelas) params.id_kelas = idKelas
+      const response = await api.get(`/nilai/monitoring/${idJadwal}`, { params })
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
+
+  // Paksa selesaikan ujian peserta yang macet/lupa submit (admin).
+  // idNilai didapat dari field id_nilai pada baris response getMonitoring.
+  forceFinish: async (idNilai) => {
+    try {
+      const response = await api.post(`/nilai/${idNilai}/selesaikan-paksa`)
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
 }

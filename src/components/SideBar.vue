@@ -109,6 +109,15 @@
                 <span class="material-symbols-outlined">event</span>
                 <span class="font-label-md text-label-md">Jadwal Ujian</span>
             </router-link>
+            <router-link to="/admin/monitoring" @click="uiStore.closeSidebar()" :class="[
+                'flex items-center gap-3 rounded-lg px-4 py-3 font-semibold hover:translate-x-1 duration-200',
+                isActivePath('/admin/monitoring')
+                    ? 'bg-sky-50 text-sky-600'
+                    : 'text-slate-600 hover:bg-slate-50 transition-all'
+            ]">
+                <span class="material-symbols-outlined">monitor_heart</span>
+                <span class="font-label-md text-label-md">Monitoring Ujian</span>
+            </router-link>
             <router-link to="/admin/ujian-token" @click="uiStore.closeSidebar()" :class="[
                 'flex items-center gap-3 rounded-lg px-4 py-3 font-semibold hover:translate-x-1 duration-200',
                 isActivePath('/admin/ujian-token')
