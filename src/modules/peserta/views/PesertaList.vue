@@ -108,6 +108,7 @@
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">Nama</th>
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">Kelas</th>
               <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">Username</th>
+              <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase">Password</th>
               <th class="px-6 py-3 text-center text-xs font-semibold text-slate-600 uppercase">Aksi</th>
             </tr>
           </thead>
@@ -119,6 +120,19 @@
               <td class="px-6 py-4 text-slate-900 font-medium">{{ peserta.nama }}</td>
               <td class="px-6 py-4 text-slate-900">{{ peserta.nama_kelas }}</td>
               <td class="px-6 py-4 text-slate-900">{{ peserta.username }}</td>
+              <td class="px-6 py-4 text-slate-900">
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-sm">{{ revealedIds.has(peserta.id) ? (peserta.password ?? '-') : '••••••••' }}</span>
+                  <button
+                    @click="togglePassword(peserta.id)"
+                    class="text-slate-400 hover:text-slate-600 transition-colors"
+                    :title="revealedIds.has(peserta.id) ? 'Sembunyikan password' : 'Lihat password'">
+                    <span class="material-symbols-outlined text-[18px]">
+                      {{ revealedIds.has(peserta.id) ? 'visibility_off' : 'visibility' }}
+                    </span>
+                  </button>
+                </div>
+              </td>
               <td class="px-6 py-4 text-center">
                 <div class="flex items-center justify-center gap-2">
                   <button
@@ -220,6 +234,7 @@ const { $confirm, $alert, $prompt } = useDialog()
 const currentPage = ref(1)
 const filterKelasId = ref('')
 const filterSearch = ref('')
+const revealedIds = ref(new Set())
 const isDownloadingTemplate = ref(false)
 const isDeletingAll = ref(false)
 const DELETE_ALL_CONFIRM_PHRASE = 'HAPUS SEMUA PESERTA'
@@ -252,6 +267,14 @@ watch(error, (newVal) => {
     setTimeout(() => pesertaStore.clearError(), 3000)
   }
 })
+
+const togglePassword = (id) => {
+  if (revealedIds.value.has(id)) {
+    revealedIds.value.delete(id)
+  } else {
+    revealedIds.value.add(id)
+  }
+}
 
 const handleCreate = () => {
   router.push({ name: 'peserta.create' })
