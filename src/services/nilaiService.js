@@ -106,4 +106,17 @@ export const nilaiService = {
       throw error
     }
   },
+
+  // Paksa selesaikan SEMUA peserta sedang_mengerjakan pada satu jadwal
+  // sekaligus (lintas semua kelas — endpoint ini tidak punya filter id_kelas).
+  forceFinishAll: async (idJadwal) => {
+    try {
+      const response = await api.post(`/nilai/monitoring/${idJadwal}/selesaikan-semua`, null, {
+        params: { confirm: true },
+      })
+      return response.data
+    } catch (error) {
+      throw error
+    }
+  },
 }

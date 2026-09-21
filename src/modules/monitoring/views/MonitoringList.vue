@@ -88,6 +88,22 @@
             </div>
           </div>
 
+          <!-- Bulk Action -->
+          <div class="flex items-center justify-between mb-4">
+            <p class="text-sm text-slate-500">
+              Daftar Peserta
+              <span v-if="selectedKelasId">(difilter ke satu kelas — tombol di samping tetap memproses semua kelas)</span>
+            </p>
+            <button
+              v-if="monitoringData"
+              @click="handleForceFinishAll"
+              :disabled="isBulkFinishing || (monitoringData.summary?.sedang_mengerjakan || 0) === 0"
+              class="flex items-center gap-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm">
+              <span class="material-symbols-outlined text-lg">done_all</span>
+              {{ isBulkFinishing ? 'Memproses...' : `Selesaikan Semua (${monitoringData.summary?.sedang_mengerjakan || 0})` }}
+            </button>
+          </div>
+
           <!-- Table Section -->
           <div class="bg-white rounded-lg shadow border border-slate-200 overflow-hidden">
             <div v-if="filteredRows.length === 0" class="text-center py-12">
@@ -180,6 +196,7 @@ const isLoadingJadwal = ref(false)
 const isLoadingMonitoring = ref(false)
 const errorMsg = ref('')
 const forcingId = ref(null)
+const isBulkFinishing = ref(false)
 const pollTimer = ref(null)
 const isPolling = computed(() => pollTimer.value !== null)
 
@@ -303,6 +320,39 @@ const handleForceFinish = async (row) => {
     await fetchMonitoring({ silent: true })
   } finally {
     forcingId.value = null
+  }
+}
+
+const handleForceFinishAll = async () => {
+  const count = monitoringData.value?.summary?.sedang_mengerjakan || 0
+  if (count === 0) return
+
+  const ok = await $confirm(
+    `Anda akan menyelesaikan paksa SEMUA ${count} peserta yang sedang mengerjakan pada jadwal ini, ` +
+    `di SEMUA kelas (bukan hanya kelas yang sedang difilter). Nilai dihitung otomatis dari jawaban ` +
+    `yang sudah tersimpan, dan tindakan ini tidak bisa dibatalkan.`,
+    { title: 'Selesaikan Semua Peserta', checkboxLabel: 'Saya paham dan yakin ingin melanjutkan' }
+  )
+  if (!ok) return
+
+  isBulkFinishing.value = true
+  try {
+    const res = await nilaiService.forceFinishAll(selectedJadwalId.value)
+    const { total_diproses, total_berhasil, total_gagal, errors } = res.data
+    if (total_gagal > 0) {
+      console.error('Gagal selesaikan sebagian peserta:', errors)
+    }
+    await $alert(
+      `Selesai memproses ${total_diproses} peserta: ${total_berhasil} berhasil` +
+      (total_gagal > 0 ? `, ${total_gagal} gagal (lihat console untuk detail).` : '.'),
+      { title: 'Selesaikan Semua Selesai', type: total_gagal > 0 ? 'warning' : 'success' }
+    )
+  } catch (err) {
+    const message = err.response?.data?.message || 'Gagal menyelesaikan semua peserta'
+    await $alert(message, { title: 'Gagal', type: 'error' })
+  } finally {
+    await fetchMonitoring({ silent: true })
+    isBulkFinishing.value = false
   }
 }
 
